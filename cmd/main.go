@@ -1,8 +1,8 @@
-package cmd
+package main
 
 import (
-	"github.com/minenok/golang-interview/handlers"
 	"github.com/gorilla/mux"
+	"github.com/minenok/golang-interview/handlers"
 	"net/http"
 )
 
@@ -12,6 +12,7 @@ func main() {
 	r.HandleFunc("/products", handlers.Products).Methods(http.MethodGet)
 	r.HandleFunc("/products", handlers.NewProduct).Methods(http.MethodPost)
 
+	http.Handle("/", r)
 	if err := http.ListenAndServe(":8090", nil); err != nil {
 		panic(err)
 	}

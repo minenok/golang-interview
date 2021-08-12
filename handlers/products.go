@@ -1,15 +1,16 @@
 package handlers
 
 import (
-	"github.com/minenok/golang-interview/db"
 	"encoding/json"
+	"github.com/minenok/golang-interview/db"
 	"net/http"
 )
 
 func NewProduct(w http.ResponseWriter, r *http.Request) {
 	dbc := db.NewDB()
-	if err := dbc.SaveProduct(r.URL.Query()["name"][0], r.URL.Query()["description"][0]); err != nil {
+	if err := dbc.SaveProduct(r.FormValue("name"), r.FormValue("description")); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 	w.WriteHeader(http.StatusCreated)
 }
@@ -33,6 +34,7 @@ func Products(w http.ResponseWriter, r *http.Request) {
 	for rows.Next() {
 		p := outProduct{}
 		_ = rows.Scan(&p.id, &p.name, &p.description)
+		products = append(products, p)
 	}
 
 	w.WriteHeader(http.StatusOK)
